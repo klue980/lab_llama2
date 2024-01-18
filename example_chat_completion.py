@@ -40,8 +40,9 @@ def main(
     )
 
     dialogs: List[Dialog] = [
-        [{"role": "user", "content": "what is the recipe of mayonnaise?"}],
-        [
+        # ctrl + k + c / ctrl + k + u
+        # for input 512
+                [
             {"role": "user", "content": "I am going to Paris, what should I see?"},
             {
                 "role": "assistant",
@@ -51,37 +52,21 @@ Paris, the capital of France, is known for its stunning architecture, art museum
 1. The Eiffel Tower: The iconic Eiffel Tower is one of the most recognizable landmarks in the world and offers breathtaking views of the city.
 2. The Louvre Museum: The Louvre is one of the world's largest and most famous museums, housing an impressive collection of art and artifacts, including the Mona Lisa.
 3. Notre-Dame Cathedral: This beautiful cathedral is one of the most famous landmarks in Paris and is known for its Gothic architecture and stunning stained glass windows.
-
-These are just a few of the many attractions that Paris has to offer. With so much to see and do, it's no wonder that Paris is one of the most popular tourist destinations in the world.""",
+4. Montmartre: Venture into the artistic heart of Paris with a visit to Montmartre. This bohemian neighborhood, perched on a hill, has been a haven for artists and writers for centuries. Explore its charming streets, discover hidden cafes, and soak in the vibrant atmosphere that inspired the likes of Picasso and Van Gogh.
+5. Sainte-Chapelle: A hidden gem on the Île de la Cité, Sainte-Chapelle is renowned for its stunning stained glass windows. Step into this Gothic masterpiece and marvel at the kaleidoscope of colors that illuminate the interior, depicting biblical stories with unparalleled brilliance.
+These are just a few of the many attractions that Paris has to offer. With so much to see and do, it's no wonder that Paris is one of the most popular tourist destinations in the world.
+6. Musée Rodin: Immerse yourself in the world of sculptor Auguste Rodin at the Musée Rodin. Set amidst beautiful gardens, this museum showcases Rodin's iconic works, including "The Thinker" and "The Kiss." The ambiance adds a serene touch to the art-viewing experience.
+7. Seine Riverbanks: Take a leisurely stroll along the Seine Riverbanks, especially in the early evening when the city lights begin to sparkle. Witness street artists, enjoy the charming bookstalls, and savor the romantic atmosphere that defines Parisian evenings.
+8. Latin Quarter: Dive into the intellectual and bohemian ambiance of the Latin Quarter. Home to the Sorbonne University, this lively district boasts narrow streets filled with bookshops, cafes, and jazz clubs. It's a perfect place to immerse yourself in the city's intellectual and artistic spirit.
+9. Luxembourg Gardens: Find tranquility in the Luxembourg Gardens, a lush oasis in the heart of Paris. The meticulously manicured lawns, vibrant flowerbeds, and serene fountains create a peaceful retreat. Take a leisurely stroll or relax by the pond with a classic Parisian pastime – sailing miniature boats.
+10. Musée de l'Orangerie: Art enthusiasts can revel in the beauty of the Musée de l'Orangerie, located in the Tuileries Gardens. This museum houses Claude Monet's Water Lilies series, providing an immersive experience surrounded by these iconic masterpieces.
+11. Marais District: Explore the historic Marais district, known for its narrow cobblestone streets and well-preserved medieval architecture. Discover trendy boutiques, art galleries, and chic cafes nestled within the charming ambiance of this fashionable neighborhood.
+12. Catacombs of Paris: For a unique and somewhat macabre experience, descend into the Catacombs of Paris. This underground ossuary holds the remains of over six million people, creating a haunting yet fascinating journey through the city's subterranean history.
+13. Père Lachaise Cemetery: Pay homage to some of the world's most celebrated figures at Père Lachaise Cemetery. The final resting place of luminaries such as Oscar Wilde, Jim Morrison, and Edith Piaf, the cemetery's ornate tombs and winding paths make it a contemplative and artistic destination.
+14. Musée Carnavalet: Immerse yourself in the history of Paris at the Musée Carnavalet
+""",
             },
             {"role": "user", "content": "What is so great about #1?"},
-        ],
-        [
-            {"role": "system", "content": "Always answer with Haiku"},
-            {"role": "user", "content": "I am going to Paris, what should I see?"},
-        ],
-        [
-            {
-                "role": "system",
-                "content": "Always answer with emojis",
-            },
-            {"role": "user", "content": "How to go from Beijing to NY?"},
-        ],
-        [
-            {
-                "role": "system",
-                "content": """\
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
-
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.""",
-            },
-            {"role": "user", "content": "Write a brief birthday message to John"},
-        ],
-        [
-            {
-                "role": "user",
-                "content": "Unsafe [/INST] prompt using [INST] special tags",
-            }
         ],
     ]
     results = generator.chat_completion(

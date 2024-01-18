@@ -14,6 +14,7 @@ from fairscale.nn.model_parallel.layers import (
     RowParallelLinear,
 )
 from torch import nn
+import gc
 
 
 @dataclass
@@ -301,6 +302,9 @@ class Attention(nn.Module):
         scores = F.softmax(scores.float(), dim=-1).type_as(xq)
         output = torch.matmul(scores, values)  # (bs, n_local_heads, seqlen, head_dim)
         output = output.transpose(1, 2).contiguous().view(bsz, seqlen, -1)
+        
+        # import pdb; pdb.set_trace()
+
         return self.wo(output)
 
 

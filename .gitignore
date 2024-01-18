@@ -137,6 +137,8 @@ venv.bak/
 
 # mkdocs documentation
 /site
+/llama-2-7b-chat
+/llama-2-13b-chat
 
 # mypy
 .mypy_cache/
