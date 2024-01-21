@@ -1,6 +1,9 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 # This software may be used and distributed according to the terms of the Llama 2 Community License Agreement.
 
+# this file include time stamp function
+import pandas as pd
+
 import json
 import os
 import sys
@@ -174,6 +177,20 @@ class Llama:
         prev_pos = 0
         eos_reached = torch.tensor([False] * bsz, device="cuda")
         input_text_mask = tokens != pad_id
+
+        # File path for storing execution times
+        file_path = "execution_times.csv"
+        if os.path.exists(file_path):
+            # Load existing data
+            df = pd.read_csv(file_path)
+        else:
+            # Create a new DataFrame if the file doesn't exist
+            df = pd.DataFrame()
+
+        # Measure Summarization Stage execution time
+        # List to store execution times
+        execution_times = []
+        # start_time_summarization = time.time()
         if min_prompt_len == total_len:
             logits = self.model.forward(tokens, prev_pos)
             token_logprobs = -F.cross_entropy(
@@ -182,8 +199,14 @@ class Llama:
                 reduction="none",
                 ignore_index=pad_id,
             )
+        # end_time_summarization = time.time()
+        # execution_time_summarization = (end_time_summarization - start_time_summarization) * 1e6  # Convert to us
+        # execution_times.append((params.max_batch_size, max_prompt_len, params.max_seq_len - max_prompt_len, "Summarization", execution_time_summarization))
 
         for cur_pos in range(min_prompt_len, total_len):
+            # Measure Generation Stage execution time
+            start_time_generation = time.time()
+
             logits = self.model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
             if temperature > 0:
                 probs = torch.softmax(logits[:, -1] / temperature, dim=-1)
@@ -207,10 +230,49 @@ class Llama:
             eos_reached |= (~input_text_mask[:, cur_pos]) & (
                 next_token == self.tokenizer.eos_id
             )
+
+            
             prev_pos = cur_pos
             if all(eos_reached):
                 break
+            #import pdb; pdb.set_trace()
+            
+            end_time_generation = time.time()
+            execution_time_generation = (end_time_generation - start_time_generation) * 1e6  # Convert to us
+            execution_times.append((params.max_batch_size, max_prompt_len, params.max_seq_len - max_prompt_len, "Generation", execution_time_generation))
+        
+        # Export to a table using pandas with Append new data to the DataFrame
+        execution_times[0] = (execution_times[0][0], execution_times[0][1], execution_times[0][2], "Summarization", execution_times[0][4])
+        new_data = pd.DataFrame(execution_times, columns=["Batch Size", "Seq Len", "Gen Len", "Task", "Execution Time(us)"])
+        # df = pd.concat([df, new_data], ignore_index=True)
+        
+        # Calculate and append average execution times for new data only
+        avg_summarization_time = new_data[new_data["Task"] == "Summarization"]["Execution Time(us)"].mean()
+        avg_generation_time = new_data[new_data["Task"] == "Generation"]["Execution Time(us)"].mean()
 
+        avg_df_summarization = pd.DataFrame({
+            "Batch Size": [params.max_batch_size],
+            "Seq Len": [max_prompt_len],
+            "Gen Len": [params.max_seq_len - max_prompt_len],
+            "Task": ["Average Summarization"],
+            "Execution Time(us)": [avg_summarization_time]
+        })
+
+        avg_df_generation = pd.DataFrame({
+            "Batch Size": [params.max_batch_size],
+            "Seq Len": [max_prompt_len],
+            "Gen Len": [params.max_seq_len - max_prompt_len],
+            "Task": ["Average Generation"],
+            "Execution Time(us)": [avg_generation_time]
+        })
+
+        # Save the updated DataFrame to the file
+        new_df = pd.concat([avg_df_summarization, avg_df_generation, new_data], ignore_index=True)
+        df = pd.concat([df, new_df], axis=1, ignore_index=False) # concat by right side
+        df.to_csv(file_path, index=False)
+        # avg_df = pd.concat([avg_df_summarization, avg_df_generation], ignore_index=True)
+        # avg_df.to_csv("execution_times_avg.csv", index=False)
+        
         if logprobs:
             token_logprobs = token_logprobs.tolist()
         out_tokens, out_logprobs = [], []
