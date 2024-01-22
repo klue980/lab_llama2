@@ -1,7 +1,10 @@
 
-# name  : Kim Seong Ho
-# email : klue980@gmail.com
-# date  : 2024.01.19
+# title : llama2/ex_sweep.py
+# description : iteration script with example_chat_completion.py of llama2
+# author : Kim Seong Ho
+# email : klue980@gmail.com 
+# since : 2024.01.19
+# update  : 2024.01.19
 
 # ex_sweep : iteration script with example_chat_completion.py of llama2
 # use subprocess.run to repeatedly put CLI commands
