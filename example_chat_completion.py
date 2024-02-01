@@ -32,7 +32,7 @@ def main(
         max_gen_len (int, optional): The maximum length of generated sequences. If None, it will be
             set to the model's max sequence length. Defaults to None.
     """
-    
+
     generator = Llama.build(
         ckpt_dir=ckpt_dir,
         tokenizer_path=tokenizer_path,
@@ -42,13 +42,22 @@ def main(
 
     dialogs: List[Dialog] = [
         # ctrl + k + c / ctrl + k + u
-        # for input 512
-        [
-            {"role": "user", "content": "What is great?"},
-        ],
+        # for input 18
+                [{"role": "user", "content": "what is the recipe of mayonnaise?"}],
     ]
-
-
+    # cache warm ><
+    results = generator.chat_completion(
+        dialogs,  # type: ignore
+        max_gen_len=max_gen_len,
+        temperature=temperature,
+        top_p=top_p,
+    )
+    results = generator.chat_completion(
+        dialogs,  # type: ignore
+        max_gen_len=max_gen_len,
+        temperature=temperature,
+        top_p=top_p,
+    )
     results = generator.chat_completion(
         dialogs,  # type: ignore
         max_gen_len=max_gen_len,

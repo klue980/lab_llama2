@@ -15,8 +15,8 @@ import subprocess
 max_seq_len_values = []
 max_batch_size_values = []
 
-for i in range(5): # for 0, 1, 2, 3, 4
-    max_seq_len_values.append(1024 + 32*(2**i))
+for i in range(1): # for 0, 1, 2, 3, 4
+    max_seq_len_values.append(18 + 32*(2**i))
     max_batch_size_values.append(1 * (4**i))
 
 # base command
