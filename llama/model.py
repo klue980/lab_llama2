@@ -273,7 +273,7 @@ class Attention(nn.Module):
         """
         bsz, seqlen, _ = x.shape
         xq, xk, xv = self.wq(x), self.wk(x), self.wv(x)
-
+        #print(f"x : {x.shape} xq : {xq.shape} xk : {xk.shape} xv : {xv.shape}")
         xq = xq.view(bsz, seqlen, self.n_local_heads, self.head_dim)
         xk = xk.view(bsz, seqlen, self.n_local_kv_heads, self.head_dim)
         xv = xv.view(bsz, seqlen, self.n_local_kv_heads, self.head_dim)
@@ -297,6 +297,7 @@ class Attention(nn.Module):
         keys = keys.transpose(1, 2) # (bs, n_local_heads, cache_len + seqlen, head_dim)
         values = values.transpose(1, 2) # (bs, n_local_heads, cache_len + seqlen, head_dim)
         scores = torch.matmul(xq, keys.transpose(2, 3)) / math.sqrt(self.head_dim)
+        #print(f"xq : {xq.shape} keys : {keys.shape} scores : {scores.shape}")
         if mask is not None:
             scores = scores + mask  # (bs, n_local_heads, seqlen, cache_len + seqlen)
         scores = F.softmax(scores.float(), dim=-1).type_as(xq)

@@ -187,10 +187,7 @@ class Llama:
             # Create a new DataFrame if the file doesn't exist
             df = pd.DataFrame()
 
-        # Measure Summarization Stage execution time
-        # List to store execution times
-        execution_times = []
-        # start_time_summarization = time.time()
+        
         if min_prompt_len == total_len:
             logits = self.model.forward(tokens, prev_pos)
             token_logprobs = -F.cross_entropy(
@@ -199,10 +196,9 @@ class Llama:
                 reduction="none",
                 ignore_index=pad_id,
             )
-        # end_time_summarization = time.time()
-        # execution_time_summarization = (end_time_summarization - start_time_summarization) * 1e6  # Convert to us
-        # execution_times.append((params.max_batch_size, max_prompt_len, params.max_seq_len - max_prompt_len, "Summarization", execution_time_summarization))
-
+        # Measure Summarization Stage execution time
+        # List to store execution times
+        execution_times = []
         for cur_pos in range(min_prompt_len, total_len):
             # Measure Generation Stage execution time
             start_time_generation = time.time()
